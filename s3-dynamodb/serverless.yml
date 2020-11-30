@@ -1,0 +1,15 @@
+service: s3-dynamodb
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+functions:
+  saveLogo:
+    handler: handler.saveLogo
+    events:
+      - http:
+          method: get
+          path: saveLogo

@@ -1,0 +1,19 @@
+version: '2.1'
+
+services:
+  localstack:
+    image: localstack/localstack-full
+    container_name: dynamodb-localstack
+    ports:
+      - "4566:4566"
+      - "8080:8080"
+    environment:
+      - SERVICES=dynamodb,s3
+      - LAMBDA_EXECUTOR=local
+      - DEFAULT_REGION=us-east-1
+      - PORT_WEB_UI=8080
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/tmp/localstack:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"

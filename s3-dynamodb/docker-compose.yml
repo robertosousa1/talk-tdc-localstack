@@ -1,0 +1,37 @@
+version: '2.1'
+
+services:
+  localstack:
+    image: localstack/localstack-full
+    container_name: s3-dynamodb-localstack
+    ports:
+      - "4566:4566"
+      - "8080:8080"
+    environment:
+      - SERVICES=dynamodb,s3
+      - LAMBDA_EXECUTOR=local
+      - DEFAULT_REGION=us-east-1
+      - PORT_WEB_UI=8080
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/tmp/localstack:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  app:
+    build: .
+    volumes:
+        - .:/src
+        - nodemodules:/src/node_modules
+    restart: on-failure
+    ports:
+        - 3000:3000
+    links:
+        - localstack
+    depends_on: 
+        - localstack
+    environment: 
+        LOCALSTACK_HOST: localhost
+        S3_PORT: 4566
+
+volumes: 
+    nodemodules: {}
